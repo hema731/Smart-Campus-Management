@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CampusCare | Smart Campus</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial;
+        background: #f2f5fa;
+        color: #202b40;
+      }
+      header {
+        background: #172b4d;
+        color: white;
+        padding: 20px 6%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      header h2 {
+        margin: 0;
+      }
+      button {
+        background: #315efb;
+        color: white;
+        border: 0;
+        padding: 11px 16px;
+        border-radius: 7px;
+        cursor: pointer;
+        margin: 4px;
+      }
+      button:hover {
+        opacity: 0.85;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 28px auto;
+        padding: 0 18px;
+      }
+      nav {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .card {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px #172b4d12;
+        margin-bottom: 18px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 15px;
+      }
+      .stat {
+        font-size: 27px;
+        font-weight: bold;
+        color: #315efb;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        margin: 7px 0 14px;
+        border: 1px solid #ccd4e0;
+        border-radius: 7px;
+      }
+      label {
+        font-weight: bold;
+        font-size: 14px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #e5e9f0;
+      }
+      th {
+        background: #f3f6fb;
+      }
+      .tag {
+        padding: 5px 9px;
+        border-radius: 15px;
+        background: #fff0cb;
+        color: #815600;
+        font-size: 12px;
+      }
+      .small {
+        color: #718096;
+        font-size: 13px;
+      }
+      .hidden {
+        display: none;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      footer {
+        text-align: center;
+        color: #718096;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>🏫 CampusCare</h2>
+      <span>Smart Campus Complaint System</span>
+    </header>
+    <div class="wrap">
+      <div class="card">
+        <h1>CampusCare Dashboard</h1>
+        <p class="small">
+          A student-focused campus complaint and maintenance platform
+        </p>
+        <label>Demonstration login – choose a role</label>
+        <select id="role" onchange="render()">
+          <option value="student">Student</option>
+          <option value="admin">Administrator</option>
+          <option value="staff">Maintenance Staff</option>
+        </select>
+        <input id="person" placeholder="Enter your name" value="Hema" />
+        <button onclick="login()">Enter Dashboard</button>
+        <span id="welcome" class="small"></span>
+      </div>
+
+      <nav>
+        <button onclick="show('home')">Dashboard</button>
+        <button onclick="show('submit')">Submit Complaint</button>
+        <button onclick="show('list')">View Complaints</button>
+      </nav>
+
+      <section id="home">
+        <div class="grid">
+          <div class="card">
+            Total Complaints
+            <div class="stat" id="total">2</div>
+          </div>
+          <div class="card">
+            Pending
+            <div class="stat" id="pending">1</div>
+          </div>
+          <div class="card">
+            In Progress
+            <div class="stat" id="progress">1</div>
+          </div>
+          <div class="card">
+            Resolved
+            <div class="stat" id="resolved">0</div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Welcome to CampusCare</h2>
+          <p>Report campus infrastructure issues and track their resolution.</p>
+          <p>
+            Categories: Electricity, Water Supply, Classroom, Furniture,
+            Cleanliness and Internet.
+          </p>
+          <button onclick="show('submit')">Report a Problem</button>
+        </div>
+      </section>
+
+      <section id="submit" class="hidden">
+        <div class="card">
+          <h2>Submit a Complaint</h2>
+          <form onsubmit="addComplaint(event)">
+            <label>Complaint Title</label>
+            <input id="title" required placeholder="Example: Fan not working" />
+            <label>Category</label>
+            <select id="category">
+              <option>Electricity</option>
+              <option>Water Supply</option>
+              <option>Classroom</option>
+              <option>Furniture</option>
+              <option>Cleanliness</option>
+              <option>Internet</option>
+              <option>Other</option>
+            </select>
+            <label>Location</label>
+            <input
+              id="location"
+              required
+              placeholder="Example: Block A, Room 101"
+            />
+            <label>Priority</label>
+            <select id="priority">
+              <option>Normal</option>
+              <option>High</option>
+              <option>Urgent</option>
+            </select>
+            <label>Description</label>
+            <textarea
+              id="description"
+              required
+              rows="4"
+              placeholder="Describe the problem"
+            ></textarea>
+            <button type="submit">Submit Complaint</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="list" class="hidden">
+        <div class="card">
+          <h2>Complaint Records</h2>
+          <div style="overflow-x: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="records"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+    <footer>
+      CampusCare | Smart Campus Infrastructure Complaint & Maintenance
+      Management
+    </footer>
+
+    <script>
+      let complaints = JSON.parse(
+        localStorage.getItem("campusComplaints") || "null",
+      ) || [
+        {
+          id: 1001,
+          title: "Classroom fan not working",
+          category: "Electricity",
+          location: "Block A - Room 101",
+          status: "Pending",
+          owner: "Hema",
+          priority: "Normal",
+        },
+        {
+          id: 1002,
+          title: "Water leakage near washroom",
+          category: "Water Supply",
+          location: "Block B",
+          status: "In Progress",
+          owner: "Disha",
+          priority: "High",
+        },
+      ];
+      let role = "student",
+        name = "Hema";
+      function save() {
+        localStorage.setItem("campusComplaints", JSON.stringify(complaints));
+      }
+      function login() {
+        role = document.getElementById("role").value;
+        name = document.getElementById("person").value || "User";
+        document.getElementById("welcome").textContent =
+          "Logged in as " + name + " (" + role + ")";
+        render();
+      }
+      function show(id) {
+        ["home", "submit", "list"].forEach((x) =>
+          document.getElementById(x).classList.toggle("hidden", x !== id),
+        );
+        if (id === "list") render();
+      }
+      function render() {
+        document.getElementById("total").textContent = complaints.length;
+        document.getElementById("pending").textContent = complaints.filter(
+          (x) => x.status === "Pending",
+        ).length;
+        document.getElementById("progress").textContent = complaints.filter(
+          (x) => x.status === "In Progress",
+        ).length;
+        document.getElementById("resolved").textContent = complaints.filter(
+          (x) => x.status === "Resolved",
+        ).length;
+        let rows =
+          role === "student"
+            ? complaints.filter((x) => x.owner === name)
+            : complaints;
+        document.getElementById("records").innerHTML =
+          rows
+            .map(
+              (x) => `<tr>
+<td>#${x.id}</td><td>${escapeHTML(x.title)}</td><td>${escapeHTML(x.category)}</td>
+<td>${escapeHTML(x.location)}</td><td><span class="tag">${x.status}</span></td>
+<td>${
+                role === "student"
+                  ? "Your complaint"
+                  : `<select onchange="updateStatus(${x.id},this.value)">
+${["Pending", "In Progress", "Resolved"].map((s) => `<option ${x.status === s ? "selected" : ""}>${s}</option>`).join("")}
+</select>`
+              }</td></tr>`,
+            )
+            .join("") || '<tr><td colspan="6">No complaints found.</td></tr>';
+      }
+      function addComplaint(e) {
+        e.preventDefault();
+        complaints.unshift({
+          id: Date.now().toString().slice(-6),
+          title: document.getElementById("title").value,
+          category: document.getElementById("category").value,
+          location: document.getElementById("location").value,
+          priority: document.getElementById("priority").value,
+          description: document.getElementById("description").value,
+          status: "Pending",
+          owner: name,
+        });
+        save();
+        e.target.reset();
+        alert("Complaint submitted successfully!");
+        show("list");
+        render();
+      }
+      function updateStatus(id, status) {
+        let c = complaints.find((x) => x.id === id);
+        if (c) {
+          c.status = status;
+          save();
+          render();
+        }
+      }
+      function escapeHTML(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      render();
+    </script>
+  </body>
+</html>
